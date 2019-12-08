@@ -38,7 +38,7 @@ pub struct ChildInfo<'a> {
     pub filename: *const c_char,
     pub args: &'a [*const c_char],
     // this is mut because we write pid to environ
-    pub environ: &'a [*mut c_char],
+    pub environ: &'a [*mut std::os::raw::c_char],
     pub cfg: &'a Config,
     pub chroot: &'a Option<Chroot>,
     pub pivot: &'a Option<Pivot>,
