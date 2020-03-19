@@ -47,6 +47,7 @@ impl Command {
             keep_caps: None,
             before_unfreeze: None,
             before_exec: None,
+            before_chroot: None,
         }
     }
 

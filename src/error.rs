@@ -22,6 +22,7 @@ pub enum ErrorCode {
     SetNs = 12,
     CapSet = 13,
     BeforeExec = 14,
+    BeforeChroot = 15,
 }
 
 /// Error runnning process
@@ -94,6 +95,8 @@ pub enum Error {
     BeforeUnfreeze(Box<::std::error::Error + Send + Sync + 'static>),
     /// Before exec callback error
     BeforeExec(i32),
+    /// Before chroot called in child process
+    BeforeChroot(i32),
 }
 
 impl Error {
@@ -121,6 +124,7 @@ impl Error {
             &CapSet(x) => Some(x),
             &BeforeUnfreeze(..) => None,
             &BeforeExec(x) => Some(x),
+            &BeforeChroot(x) => Some(x),
         }
     }
 }
@@ -149,6 +153,7 @@ impl StdError for Error {
             &CapSet(_) => "error when setting capabilities",
             &BeforeUnfreeze(_) => "error in before_unfreeze callback",
             &BeforeExec(_) => "error in before_exec callback",
+            &BeforeChroot(_) => "err in before_chroot callback",
         }
     }
 }
@@ -241,6 +246,7 @@ impl ErrorCode {
             C::SetNs => E::SetNs(errno),
             C::CapSet => E::CapSet(errno),
             C::BeforeExec => E::BeforeExec(errno),
+            C::BeforeChroot => E::BeforeChroot(errno),
         }
     }
     pub fn from_i32(code: i32, errno: i32) -> Error {
