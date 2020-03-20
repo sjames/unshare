@@ -25,7 +25,7 @@ impl Command {
         self.before_unfreeze = Some(Box::new(f));
     }
 
-    /// Set a callback to run just before chrooting, after chroot, the process runs in the chroot
+    /// Set a callback to run just before chrooting or pivot_root, after chroot, the process runs in the chroot
     /// jail not allowing it any access to other parts of the filesystem. This callback allows 
     /// the client to configure anything before this happens.
     /// This callback runs in the child process. As with the other callbacks running in the

@@ -95,6 +95,14 @@ pub unsafe fn child_after_clone(child: &ChildInfo) -> ! {
         }
     }
 
+    if let Some(callback) = child.before_chroot {
+        if let Err(e) = callback() {
+            fail_errno(Err::BeforeChroot,
+                e.raw_os_error().unwrap_or(10873289),
+                epipe);
+        }
+    }
+
     child.pivot.as_ref().map(|piv| {
         if ffi::pivot_root(piv.new_root.as_ptr(), piv.put_old.as_ptr()) != 0 {
             fail(Err::ChangeRoot, epipe);
@@ -109,16 +117,7 @@ pub unsafe fn child_after_clone(child: &ChildInfo) -> ! {
         }
     });
 
-    if let Some(_chroot) = child.chroot.as_ref() {
-        if let Some(callback) = child.before_chroot {
-            if let Err(e) = callback() {
-                fail_errno(Err::BeforeChroot,
-                    e.raw_os_error().unwrap_or(10873289),
-                    epipe);
-            }
-        }
-    }
-
+   
     child.chroot.as_ref().map(|chroot| {
         if libc::chroot(chroot.root.as_ptr()) != 0 {
             fail(Err::ChangeRoot, epipe);
