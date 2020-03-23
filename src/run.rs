@@ -227,7 +227,7 @@ impl Command {
             }
         });
 
-        let mut nstack = [0u8; 4096];
+        let mut nstack = [0u8; 4096*4];
         let mut wakeup = Some(wakeup);
         let mut wakeup_rd = Some(wakeup_rd);
         let mut errpipe_wr = Some(errpipe_wr);
